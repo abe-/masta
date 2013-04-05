@@ -23,4 +23,4 @@ These tools have been developed with Processing and OpenSCAD. To be able run the
   
   with Processing <2.0b8 -> http://mrfeinberg.com/peasycam/
 
-* JSON-Processing: https://github.com/agoransson/JSON-processing
+* JSON-Processing 0.1.4 (not valid for 2.0b8): https://github.com/downloads/agoransson/JSON-processing/json4processing-0.1.4.zip
