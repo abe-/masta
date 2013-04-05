@@ -12,9 +12,9 @@ These tools have been developed with Processing and OpenSCAD. To be able run the
 * Processing 2.0: https://code.google.com/p/processing/downloads/list
 * Toxiclibs v0020: http://hg.postspectacular.com/toxiclibs/downloads/toxiclibs-complete-0020.zip
 * controlP5 
-** with Processing >2.0b7 -> 2.0.4 or later: http://www.sojamo.de/libraries/controlP5/download/controlP5-2.0.4.zip
-** with Processing <2.0b6 -> 2.0.3 https://code.google.com/p/controlp5/downloads/detail?name=controlP5-2.0.3.zip&can=2&q=
+* * with Processing >2.0b7 -> 2.0.4 or later: http://www.sojamo.de/libraries/controlP5/download/controlP5-2.0.4.zip
+* * with Processing <2.0b6 -> 2.0.3 https://code.google.com/p/controlp5/downloads/detail?name=controlP5-2.0.3.zip&can=2&q=
 * peasyCam
-** with Processing >2.0b8 -> (jeff version) https://github.com/jeffg2k/peasycam/blob/master/distribution/peasycam.zip?raw=true
-** with Processing <2.0b8 -> http://mrfeinberg.com/peasycam/
+* * with Processing >2.0b8 -> (jeff version) https://github.com/jeffg2k/peasycam/blob/master/distribution/peasycam.zip?raw=true
+* * with Processing <2.0b8 -> http://mrfeinberg.com/peasycam/
 
