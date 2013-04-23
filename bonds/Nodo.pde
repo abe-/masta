@@ -46,7 +46,6 @@ class Nodo extends VerletParticle {
       fisica.addParticle(this);        
       this.addConstraint(new CustomConstraint());
      
-      
       for (Nodo n : nodos) {
         if (n != this) {
           //this.addBehavior(new AttractionBehavior(n, 2*RNODO, -.01));
@@ -107,7 +106,7 @@ class Nodo extends VerletParticle {
     }
     if (particulas && !doSave) {
         stroke(0, 150, 150);
-        strokeWeight(2*RNODO);
+        strokeWeight(RNODO*zoom); // Processing 2.0b8
         if (this.isLocked()) stroke(150,0,0);
         point(x, y, z);
     }

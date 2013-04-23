@@ -107,12 +107,12 @@ class ListaRelaciones {
         }
 
         // Ordenamos la lista ángulos por azimuth para el mapa de conexiones
-        List _list = new LinkedList(lineasAngulos.entrySet());
+        java.util.List _list = new java.util.LinkedList(lineasAngulos.entrySet());
         java.util.Collections.sort(
           _list, 
-          new Comparator() {
+          new java.util.Comparator() {
             public int compare(Object o1, Object o2) {
-            return ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue());
+            return ((Comparable) ((java.util.Map.Entry) (o1)).getValue()).compareTo(((java.util.Map.Entry) (o2)).getValue());
           }
         });        
         
@@ -128,7 +128,7 @@ class ListaRelaciones {
         String id = "[";
         int cuenta2 = 0;
         float angAzimuth0 = 0;        
-        for (Map.Entry me : angulos.entrySet()) {
+        for (java.util.Map.Entry me : angulos.entrySet()) {
           altitud += me.getKey();
           azimuth += me.getValue();
           id += separa(ids.get(me.getValue()));          

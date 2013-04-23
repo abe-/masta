@@ -20,6 +20,8 @@ import java.nio.FloatBuffer;
 import java.util.Collections;
 import java.util.List; 
 import processing.pdf.*;
+import java.awt.event.*;
+//import codeanticode.gsvideo.*;
 
 PeasyCam cam;
 ToxiclibsSupport gfx;
@@ -46,8 +48,11 @@ boolean doSave;
 
 int numMax = 10;
 int cuentaNodos = 0;
+float zoom = 1;
 
-
+// MovieMaker
+// GSMovieMaker mm;
+// int fps = 25;
 
 /***************************
 * MAIN :: setup()
@@ -63,16 +68,19 @@ void setup() {
   
   gfx = new ToxiclibsSupport(this);  
   ui = new ControlP5(this);
+  ui.setAutoDraw(false);
   
   ui.addButton("initSimulation").setPosition(10, 10);
-  ui.addButton("compacta").setPosition(10, 70);  
-  ui.addToggle("particulas").setPosition(10, 110);
-  ui.addToggle("edit").setPosition(10, 170);
-  ui.addSlider("drag", 0, 1).setPosition(100, 10);
-  ui.addSlider("rugosidad", 0, 2).setPosition(300, 10);
-  ui.addSlider("reboteEntreNodos", 0, 1).setPosition(410, 10);  
-  ui.addSlider("numMax", 0, 600).setPosition(570, 10);
-  ui.addSlider("RNODO", 0, 40).setPosition(730, 10);
+  ui.addButton("compacta").setPosition(10, 35);  
+  
+  ui.addToggle("particulas").setPosition(310, 10).setWidth(20).setColorLabel(50);
+  ui.addToggle("edit").setPosition(410, 10).setWidth(20).setColorLabel(50);
+
+  ui.addSlider("numMax", 0, 600).setPosition(100, 10).setColorLabel(50);
+  ui.addSlider("RNODO", 0, 40).setPosition(100, 30).setColorLabel(50);
+  ui.addSlider("reboteEntreNodos", 0, 1).setPosition(100, 50).setColorLabel(50);  
+  ui.addSlider("drag", 0, 1).setPosition(100, 70).setColorLabel(50);
+  ui.addSlider("rugosidad", 0, 2).setPosition(100, 90).setColorLabel(50);
  
   //// 
   // Inicializamos mesh a partir de un archivo STL
@@ -129,6 +137,17 @@ void setup() {
   cam.setMinimumDistance(50);
   cam.setMaximumDistance(1500);  
   cam.setResetOnDoubleClick(false);
+  
+  // PeasyCam has problems with 2.0b8:
+  addMouseWheelListener(new MouseWheelListener() { 
+    public void mouseWheelMoved(MouseWheelEvent mwe) { 
+      mouseWheel(mwe.getWheelRotation());
+  }});  
+  
+  // MovieMaker
+  // mm = new GSMovieMaker(this, width, height, "bunnyrhino-with-masta.ogg", GSMovieMaker.THEORA, GSMovieMaker.HIGH, fps);
+  // mm.setQueueSize(50, 10);
+  // mm.start();
 }
 
 
@@ -158,9 +177,8 @@ void initSimulation(int value) {
 
 
 /***************************
-* MAIN :: initSimulation()
-* Subdivide una cara si su área es mayor que un valor,
-* y añade la cara a la mesh
+* MAIN :: compacta()
+* 
 *******/
 
 void compacta(int value) {
@@ -215,7 +233,7 @@ void draw() {
   }
   
   ////
-  // Fondo y luces espacio 3D
+  // Fondo, zoom y luces espacio 3D
   //  
   
   background(255);
@@ -223,12 +241,15 @@ void draw() {
   directionalLight(128, 128, 128, 0, 0, -1);
   lightFalloff(1, 0, 0); 
   lightSpecular(0, 0, 0);
+  pushMatrix();
+  scale(zoom, zoom, zoom);
 
   ////
   // Actualizamos simulación
   //  
   
   fisica.update();
+  
   
   // detección de colisiones y dibujo de nodos
   for (Nodo n : nodos) {
@@ -266,22 +287,27 @@ void draw() {
     }
   } 
 
+  popMatrix();
 
   ////
   // Controles UI
   // 
   
   cam.beginHUD();
-  lights();
+  noLights();
+  ui.draw();
   textAlign(RIGHT);
   fill(50);
-  text(frameRate, width-10, height-10);
-  ui.draw();
+  text(frameRate, width-10, 15);  
   cam.endHUD();
    
   
   if (doSave) saveFrame("masta-single-####");
   doSave = false;
+  
+  // MovieMaker - Add window's pixels to movie
+  // loadPixels();
+  // mm.addFrame(pixels);  
 }
 
 
@@ -297,6 +323,16 @@ void mouseReleased() {
 }
 
 
+/***************************
+* EVENTS :: mouseWheel(delta)
+* Only in edit mode
+*******/
+void mouseWheel(int delta) {
+  zoom -= delta * 0.1;
+  zoom = constrain(zoom, 0.1, 10); 
+}
+ 
+ 
 /***************************
 * EVENTS :: keyReleased()
 *
@@ -315,4 +351,15 @@ void keyReleased() {
   else if (key == 'p') {
     doSave = true;
   }
+}
+
+
+/***************************
+* STOP
+*
+*******/
+void stop() {
+  // MovieMaker
+  // mm.finish();
+  super.stop();
 }

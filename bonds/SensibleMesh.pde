@@ -16,18 +16,20 @@ class SensibleMesh extends WETriangleMesh {
     sh = createShape(POINTS);
     shEdit = createShape(POINTS);
     java.util.Iterator iter = vertices.iterator();
+    sh.beginShape(POINTS);
+    shEdit.beginShape(POINTS);
     while(iter.hasNext()) {
        Vertex vx = (Vertex) iter.next();
        sh.stroke(100);
-       sh.strokeWeight(.3);
+       sh.strokeWeight(1);
        sh.vertex(vx.x, vx.y, vx.z);
        
        shEdit.stroke(200, 0, 0);
        shEdit.strokeWeight(2);
        shEdit.vertex(vx.x, vx.y, vx.z);
     }
-    sh.end();
-    shEdit.end();
+    sh.endShape();
+    shEdit.endShape();
   } 
  
   
