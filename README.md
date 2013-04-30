@@ -7,20 +7,11 @@ Read more on the MASTA project here: http://masta-project.com
 Installation requirements
 -------------------------
 
-These tools have been developed with Processing and OpenSCAD. To be able run them you'll need
+These tools have been developed with Processing and OpenSCAD. To be able run them you'll need (working version now uses Processing v2.0b8):
 
-*   Processing 2.0: https://code.google.com/p/processing/downloads/list
+*   Processing 2.0b8: http://www.processing.org/download
 *   Toxiclibs v0020: http://hg.postspectacular.com/toxiclibs/downloads/toxiclibs-complete-0020.zip
-*   controlP5:
-
-    with Processing >2.0b7 -> 2.0.4 or later: http://www.sojamo.de/libraries/controlP5/download/controlP5-2.0.4.zip
-    
-    with Processing <2.0b6 -> 2.0.3 https://code.google.com/p/controlp5/downloads/detail?name=controlP5-2.0.3.zip&can=2&q=
-
-* peasyCam
-
-  with Processing >2.0b8 -> (jeff version) https://github.com/jeffg2k/peasycam/blob/master/distribution/peasycam.zip?raw=true
+*   controlP5: http://www.sojamo.de/libraries/controlP5/download/controlP5-2.0.4.zip
+*   peasyCam: (jeff version) https://github.com/jeffg2k/peasycam/blob/master/distribution/peasycam.zip?raw=true
+*   OpenSCAD: http://www.openscad.org/
   
-  with Processing <2.0b8 -> http://mrfeinberg.com/peasycam/
-
-* JSON-Processing 0.1.4 (not valid for 2.0b8): https://github.com/downloads/agoransson/JSON-processing/json4processing-0.1.4.zip
