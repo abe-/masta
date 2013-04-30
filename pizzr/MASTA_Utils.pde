@@ -1,8 +1,42 @@
 ///////////////////////////////////////////////////////
+// UI - openFile(), processFile(file)
+// file dialog
+///////////////////////
+
+void openFile() {
+  // Stop the main loop:
+  openingFile = true;
+  
+  selectInput("Select a STL file to process:", "processFile");
+}
+
+void updateFile() {
+  // Stop the main loop:
+  openingFile = true;
+  
+  initMesh(lastFile);
+  
+  // Restart the main loop:
+  openingFile = false;    
+}
+
+void processFile(File selection) {
+  if (selection != null) {
+    println(selection.getAbsolutePath());
+    lastFile = selection.getAbsolutePath(); 
+    initMesh(lastFile);
+  }
+  
+  // Restart the main loop:
+  openingFile = false;  
+}
+
+
+///////////////////////////////////////////////////////
 // UI - controlEvent(event)
 // Receives user UI events
 ///////////////////////
-
+/*
 public void controlEvent(ControlEvent theEvent) {
   println(theEvent.controller().name()+" = "+theEvent.value());  
   if (theEvent.controller().value() != 0) {
@@ -16,16 +50,16 @@ public void controlEvent(ControlEvent theEvent) {
     
     String url = forms.get(formName);
     String file = fileDownload(url, sketchPath);
-    initMesh(file);
   }
 }
-
+*/
 
 
 ///////////////////////////////////////////////////////
 // UI - RetrieveForms()
 // Connects to MASTA and retreives and shows the list of forms in the server
 ///////////////////////
+/*
 public void RetrieveForms() {
   try  {
     DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -68,7 +102,7 @@ public void RetrieveForms() {
    
 
 }
-
+*/
 
 ///////////////////////////////////////////////////////
 // UI - PostForms()
@@ -83,7 +117,7 @@ void PostForms() {
 // UTILS - fileUrl()
 // Downloads a file to a directory given its URL and locatFileName
 ///////////////////////
-
+/*
 public void fileUrl(String fAddress, String localFileName, String destinationDir) {
     OutputStream outStream = null;
     URLConnection  uCon = null;
@@ -123,7 +157,7 @@ public void fileUrl(String fAddress, String localFileName, String destinationDir
     }
 }
 
-
+*/
 
 ///////////////////////////////////////////////////////
 // UTILS - loadFile()
@@ -131,7 +165,7 @@ public void fileUrl(String fAddress, String localFileName, String destinationDir
 ///////////////////////
 
 private static byte[] loadFile(File file) throws IOException {
-	    InputStream is = new FileInputStream(file);
+	    InputStream is = new java.io.FileInputStream(file);
  
 	    long length = file.length();
 	    if (length > Integer.MAX_VALUE) {
@@ -159,6 +193,7 @@ private static byte[] loadFile(File file) throws IOException {
 // UTILS - fileDownload()
 // Downloads a file to a directory given its URL and returns the filename
 ///////////////////////
+/*
 public String fileDownload(String fAddress, String destinationDir) {    
     int slashIndex =fAddress.lastIndexOf('/');
     int periodIndex =fAddress.lastIndexOf('.');
@@ -175,4 +210,4 @@ public String fileDownload(String fAddress, String destinationDir) {
     }
 }
 
-
+*/

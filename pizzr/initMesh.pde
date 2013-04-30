@@ -1,11 +1,21 @@
 public void initMesh(String file) {
-  piezas.clear();
+
+  // Init data buffers
+  
+  piezas = new ArrayList();
+  carasPiezas = new HashMap();
+  meshSelected = null;
+  meshCopia = null;
+  meshScaled = null;
+
+  // Load data into buffers   
+  
   meshBase = (WETriangleMesh)new STLReader().loadBinary(sketchPath(file), STLReader.WEMESH);
 //  meshBase = new WETriangleMesh();
 //  meshBase.addMesh (new Sphere(new Vec3D(0, 0, 0), 30).toMesh(5));
   meshBase.computeCentroid();
   meshBase.center(new Vec3D(0, 0, 0));
-  meshBase.scale(100); // gato3 - 100 ; tucan - 2000
+  meshBase.scale(float(modelScale)); // gato3 - 100 ; tucan - 2000
   
   meshScaled = new WETriangleMesh().addMesh(meshBase).scale(1.5);
 

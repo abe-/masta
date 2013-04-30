@@ -70,23 +70,58 @@ void setup() {
   ui = new ControlP5(this);
   ui.setAutoDraw(false);
   
-  ui.addButton("initSimulation").setPosition(10, 10);
-  ui.addButton("compacta").setPosition(10, 35);  
+  ui.addButton("openFile").setPosition(10, 10);
   
-  ui.addToggle("particulas").setPosition(310, 10).setWidth(20).setColorLabel(50);
-  ui.addToggle("edit").setPosition(410, 10).setWidth(20).setColorLabel(50);
-
-  ui.addSlider("numMax", 0, 600).setPosition(100, 10).setColorLabel(50);
-  ui.addSlider("RNODO", 0, 40).setPosition(100, 30).setColorLabel(50);
-  ui.addSlider("reboteEntreNodos", 0, 1).setPosition(100, 50).setColorLabel(50);  
-  ui.addSlider("drag", 0, 1).setPosition(100, 70).setColorLabel(50);
-  ui.addSlider("rugosidad", 0, 2).setPosition(100, 90).setColorLabel(50);
+  ui.addButton("initSimulation").setPosition(110, 10);
+  ui.addButton("compacta").setPosition(110, 35);  
+  
+  ui.addSlider("numMax", 0, 600).setPosition(200, 10).setColorLabel(50);
+  ui.addSlider("RNODO", 0, 40).setPosition(200, 30).setColorLabel(50);
+  ui.addSlider("reboteEntreNodos", 0, 1).setPosition(200, 50).setColorLabel(50);  
+  ui.addSlider("drag", 0, 1).setPosition(200, 70).setColorLabel(50);
+  ui.addSlider("rugosidad", 0, 2).setPosition(200, 90).setColorLabel(50);  
+  
+  ui.addToggle("particulas").setPosition(410, 10).setWidth(20).setColorLabel(50);
+  ui.addToggle("edit").setPosition(510, 10).setWidth(20).setColorLabel(50);
  
+
+  //// 
+  // Inicializamos la superficie con el mesh por defecto
+  //
+  initMesh(dataPath("bunnyrhino.stl"));
+
+  //// 
+  // Inicializamos la cámara
+  //
+  
+  cam = new PeasyCam(this, 1000);
+  cam.setMinimumDistance(50);
+  cam.setMaximumDistance(1500);  
+  cam.setResetOnDoubleClick(false);
+  
+  // PeasyCam has problems with 2.0b8:
+  addMouseWheelListener(new MouseWheelListener() { 
+    public void mouseWheelMoved(MouseWheelEvent mwe) { 
+      mouseWheel(mwe.getWheelRotation());
+  }});  
+  
+  // MovieMaker
+  // mm = new GSMovieMaker(this, width, height, "bunnyrhino-with-masta.ogg", GSMovieMaker.THEORA, GSMovieMaker.HIGH, fps);
+  // mm.setQueueSize(50, 10);
+  // mm.start();
+}
+
+
+/***************************
+* MAIN :: initMesh(fileName)
+* 
+*******/
+void initMesh(String fileName) {
   //// 
   // Inicializamos mesh a partir de un archivo STL
   //
   
-  WETriangleMesh meshIni = (WETriangleMesh) new STLReader().loadBinary(dataPath("bunnyrhino2.stl"), STLReader.WEMESH);
+  WETriangleMesh meshIni = (WETriangleMesh) new STLReader().loadBinary(fileName, STLReader.WEMESH);
   meshIni.scale(2);  
   WETriangleMesh mesh = new WETriangleMesh();
   
@@ -128,30 +163,7 @@ void setup() {
   //
   
   initSimulation(0);
-
-  //// 
-  // Inicializamos la cámara
-  //
-  
-  cam = new PeasyCam(this, 1000);
-  cam.setMinimumDistance(50);
-  cam.setMaximumDistance(1500);  
-  cam.setResetOnDoubleClick(false);
-  
-  // PeasyCam has problems with 2.0b8:
-  addMouseWheelListener(new MouseWheelListener() { 
-    public void mouseWheelMoved(MouseWheelEvent mwe) { 
-      mouseWheel(mwe.getWheelRotation());
-  }});  
-  
-  // MovieMaker
-  // mm = new GSMovieMaker(this, width, height, "bunnyrhino-with-masta.ogg", GSMovieMaker.THEORA, GSMovieMaker.HIGH, fps);
-  // mm.setQueueSize(50, 10);
-  // mm.start();
 }
-
-
-
 
 
 /***************************
@@ -202,7 +214,7 @@ void draw() {
   // estemos por debajo de numMax
   //
   
-  if (nodos.size() < numMax && frameCount%1 == 0 && estado == 0) {
+  if (nodos != null && nodos.size() < numMax && frameCount%1 == 0 && estado == 0) {
     WEVertex we = null;
     int r = floor(random(smesh.vertices.size()));
     we = smesh.getVertexForID(r);
@@ -217,19 +229,21 @@ void draw() {
   // Destruimos las partículas señaladas con weight = 10
   //
   
-  nodosParaDestruir.clear();
-  for (Nodo n : nodos) {
-    if (n.getWeight() == 10) {
-      nodosParaDestruir.add(n);
+  if (nodos != null) {
+    nodosParaDestruir.clear();
+    for (Nodo n : nodos) {
+      if (n.getWeight() == 10) {
+        nodosParaDestruir.add(n);
+      }
     }
-  }
-  for (Nodo n : nodosParaDestruir) {
-    for (Nodo m : nodos) {
-      VerletSpring spr = fisica.getSpring(n, m);
-      fisica.removeSpring(spr);
+    for (Nodo n : nodosParaDestruir) {
+      for (Nodo m : nodos) {
+        VerletSpring spr = fisica.getSpring(n, m);
+        fisica.removeSpring(spr);
+      }
+      fisica.removeParticle(n);
+      nodos.remove(n);
     }
-    fisica.removeParticle(n);
-    nodos.remove(n);
   }
   
   ////
@@ -248,20 +262,24 @@ void draw() {
   // Actualizamos simulación
   //  
   
-  fisica.update();
+  if (fisica != null) fisica.update();
   
   
   // detección de colisiones y dibujo de nodos
-  for (Nodo n : nodos) {
-    n.colisiones();
-    n.draw();
-    n.colision = false;    
+  if (nodos != null) {
+    for (Nodo n : nodos) {
+      n.colisiones();
+      n.draw();
+      n.colision = false;    
+    }
   }
   
   // cálculo de estructura
-  for (Relacion r : relaciones.relaciones) {
-    r.update();
-    r.draw();
+  if (relaciones != null) {
+    for (Relacion r : relaciones.relaciones) {
+      r.update();
+      r.draw();
+    }
   }  
   
 
@@ -310,6 +328,21 @@ void draw() {
   // mm.addFrame(pixels);  
 }
 
+
+/***************************
+* UTILS :: openFile()
+*******/
+
+void openFile() {
+  selectInput("Select a STL file to process:", "processFile");
+}
+
+void processFile(File selection) {
+  if (selection != null) {
+    println(selection.getAbsolutePath());
+    initMesh(selection.getAbsolutePath());
+  }
+}
 
 /***************************
 * EVENTS :: mouseReleased()

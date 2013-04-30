@@ -44,8 +44,11 @@ HashMap <WEFace, Pieza> carasPiezas;
 boolean meshCargada;
 boolean controlIzquierda;
 boolean doSave;
+boolean openingFile;
 int sel = 0;
 int nSel = 0;
+String modelScale = "100"; // as string for textfield input
+String lastFile = "gato3.stl";
 
 //
 // MASTA server, data & UI
@@ -74,6 +77,13 @@ public void setup() {
   // Init UI for MASTA bond
 
   cp5 = new ControlP5(this);
+  cp5.addButton("openFile").setPosition(10, 10);
+  cp5.addButton("updateFile").setPosition(110, 10);  
+  cp5.addTextfield("modelScale").setPosition(110, 35).setSize(70, 20).setAutoClear(false).setValue(modelScale);
+  /* 
+  // Still TODO: update JSON lib version to retrieve forms  
+  // from the MASTA server
+  
   cp5.addButton("RetrieveForms")
      .setPosition(20, 60)
      .setValue(0)
@@ -82,11 +92,12 @@ public void setup() {
   cp5.addButton("PostForms")
      .setPosition(20, 90)
      .updateSize()
-     .setColorBackground(30);     
+     .setColorBackground(30);
   MultiList selector = cp5.addMultiList("Forms",20,20,70,12);
   formList = selector.add("MASTA Forms", 0);
   formList.setColorBackground(color(100,0,0))
           .setHeight(30);    
+  */
   forms = new HashMap();
   
   mastaFont = createFont("Intro.ttf", 30, true);
@@ -97,13 +108,8 @@ public void setup() {
   gfx = new ToxiclibsSupport(this);
   g3 = (PGraphicsOpenGL)g;
 
-  // Init data buffers
-
-  piezas = new ArrayList();
-  carasPiezas = new HashMap();
-  meshSelected = null;
-  meshCopia = null;
-  meshScaled = null;
+  // init with default mesh
+  initMesh("gato3.stl");
   
   // Init camera
   
@@ -114,7 +120,6 @@ public void setup() {
   // Log & debug
   output = createWriter("MASTA-log.txt");
 }
-
 
 
 
@@ -141,15 +146,17 @@ public void draw() {
   fill(255);
 //  gfx.mesh(meshScaled);
   
-  for (Pieza pieza : piezas) {
-    WETriangleMesh pmesh = pieza.mesh;
-    Vec3D centroBase = pieza.base.getCentroid();
-    Vec3D centroPieza = pmesh.computeCentroid();
-    Vec3D desplazamiento = new Vec3D(centroPieza).scale(1.2-1);
-    pushMatrix();
-    translate(desplazamiento.x, desplazamiento.y, desplazamiento.z);
-    gfx.mesh(pmesh);
-    popMatrix();
+  if (!openingFile) {
+    for (Pieza pieza : piezas) {
+      WETriangleMesh pmesh = pieza.mesh;
+      Vec3D centroBase = pieza.base.getCentroid();
+      Vec3D centroPieza = pmesh.computeCentroid();
+      Vec3D desplazamiento = new Vec3D(centroPieza).scale(1.2-1);
+      pushMatrix();
+      translate(desplazamiento.x, desplazamiento.y, desplazamiento.z);
+      gfx.mesh(pmesh);
+      popMatrix();
+    }
   }
   
   popMatrix();
@@ -157,6 +164,7 @@ public void draw() {
   // GUI
   currCameraMatrix = new PMatrix3D(g3.camera);
   camera();
+  noLights();
   cp5.draw();
   g3.camera = currCameraMatrix;  
 }
