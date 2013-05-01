@@ -35,13 +35,13 @@ VerletPhysics fisica;
 ControlP5 ui;
 Face faceOver = null;
 int RCENTRO = 30;
-int RNODO = 3;
+int RNODO = 8;
 boolean meshFill = false;
 boolean particulas = true;
 boolean edit = false;
-float drag = 0.75;
-float reboteEntreNodos = 1;
-float rugosidad = 1.25;
+float drag = 0.95;
+float reboteEntreNodos = 0.2;
+float rugosidad = 0.5;
 float amin = 10000;
 int estado;
 boolean doSave;
@@ -71,6 +71,7 @@ void setup() {
   ui.setAutoDraw(false);
   
   ui.addButton("openFile").setPosition(10, 10);
+  ui.addButton("exportNodes").setPosition(10, 35);
   
   ui.addButton("initSimulation").setPosition(110, 10);
   ui.addButton("compacta").setPosition(110, 35);  
@@ -345,6 +346,14 @@ void processFile(File selection) {
 }
 
 /***************************
+* UTILS :: exportNodes()
+*******/
+
+void exportNodes() {
+  relaciones.export(); 
+}
+
+/***************************
 * EVENTS :: mouseReleased()
 * Only in edit mode
 *******/
@@ -376,7 +385,7 @@ void keyReleased() {
     numMax += 10;
   }
   else if (key == 'e') {
-    relaciones.export();   
+    exportNodes();   
   }
   else if (key == 'm') {
    // mesh = relaciones.exportToMesh();
