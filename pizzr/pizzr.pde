@@ -6,7 +6,6 @@ import toxi.volume.*;
 import toxi.util.*;
 import toxi.processing.*;
 import java.awt.event.*;
-import org.json.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -78,7 +77,8 @@ public void setup() {
 
   cp5 = new ControlP5(this);
   cp5.addButton("openFile").setPosition(10, 10);
-  cp5.addButton("updateFile").setPosition(110, 10);  
+  cp5.addButton("updateFile").setPosition(110, 10);
+  cp5.addButton("saveMesh").setPosition(10, 35);   
   cp5.addTextfield("modelScale").setPosition(110, 35).setSize(70, 20).setAutoClear(false).setValue(modelScale);
   /* 
   // Still TODO: update JSON lib version to retrieve forms  
@@ -177,10 +177,13 @@ public void draw() {
 ///////////////////////
 
 void saveMesh() {
-  // save mesh as STL or OBJ file
-  meshSelected.pointTowards(new Vec3D(0, 0, -1), meshSelected.faces.get(0).normal);
-  
-  meshSelected.saveAsSTL(sketchPath("cara"+sel+".stl"));
+  // save pieces as STL ready for printing
+  int cta = 0;
+  for (Pieza p : piezas) {
+    p.mesh.pointTowards(new Vec3D(0, 0, -1), p.mesh.faces.get(0).normal);
+    p.mesh.saveAsSTL(sketchPath("cara"+cta+".stl"));
+    cta++;
+  }
   doSave=false;
 }
 
