@@ -29,6 +29,7 @@ SensibleMesh smesh;
 ArrayList <Nodo> nodos;
 ArrayList <Nodo> nodosParaDestruir;
 ListaRelaciones relaciones;
+PImage objeto; // To show an image of an object instead of lines
 
 // Variables simulación
 VerletPhysics fisica;
@@ -105,6 +106,9 @@ void setup() {
     public void mouseWheelMoved(MouseWheelEvent mwe) { 
       mouseWheel(mwe.getWheelRotation());
   }});  
+  
+  // Shows objects connecting the nodes instead of lines
+  // objeto = loadImage("meccano.png");
   
   // MovieMaker
   // mm = new GSMovieMaker(this, width, height, "bunnyrhino-with-masta.ogg", GSMovieMaker.THEORA, GSMovieMaker.HIGH, fps);
